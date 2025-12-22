@@ -1,25 +1,22 @@
 #include "main.h"
 
 /**
- * execute_command - Execute a command (single word, no args)
- * @args: unused (future use)
+ * execute_command - Execute a command with arguments (no PATH search)
+ * @args: tokenized args (args[0] is command path)
  * @argv0: program name
- * @line: command line (single word)
- * @last_status: unused
+ * @last_status: last status (unused now)
  *
- * Return: exit status of last command or 0
+ * Return: exit status of command if exited, else 0
  */
-int execute_command(char **args, char *argv0, char *line, int last_status)
+int execute_command(char **args, char *argv0, int last_status)
 {
 	pid_t pid;
 	int status;
-	char *cmd_args[2];
 
-	(void)args;
 	(void)last_status;
 
-	cmd_args[0] = line;
-	cmd_args[1] = NULL;
+	if (args == NULL || args[0] == NULL)
+		return (0);
 
 	pid = fork();
 	if (pid == -1)
@@ -27,12 +24,12 @@ int execute_command(char **args, char *argv0, char *line, int last_status)
 
 	if (pid == 0)
 	{
-		execve(line, cmd_args, environ);
+		execve(args[0], args, environ);
 
-		/* If execve fails */
+		/* execve failed */
 		write(STDERR_FILENO, argv0, strlen(argv0));
 		write(STDERR_FILENO, ": ", 2);
-		write(STDERR_FILENO, line, strlen(line));
+		write(STDERR_FILENO, args[0], strlen(args[0]));
 		write(STDERR_FILENO, ": No such file or directory\n", 28);
 		_exit(127);
 	}
