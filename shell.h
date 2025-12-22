@@ -1,42 +1,19 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef SHELL_H
+#define SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include <string.h>
 #include <sys/stat.h>
-#include <errno.h>
-#include <fcntl.h>
+#include <sys/wait.h>
 
-/* Environment variable */
-extern char **environ;
+/* Core functions */
+void execute_command(char *line, char *prog, char **env, int count);
+char **split_line(char *line);
+char *find_path(char *cmd, char **env);
+void print_error(char *prog, char *cmd, int count);
+void free_argv(char **argv);
 
-/* Shell state structure */
-typedef struct shell_state
-{
-    char *argv0;
-} shell_state_t;
+#endif /* SHELL_H */
 
-/* Main shell functions */
-void display_prompt(void);
-char *read_line(void);
-char **parse_line(char *line);
-void free_array(char **array);
-
-/* Path and execution functions */
-char *get_path_env(void);
-char *check_absolute_path(char *command);
-char *search_in_path(char *command, char *path_env);
-char *find_path(char *command);
-int execute_command(char **args, char *argv0, char *line, int last_status);
-int fork_and_execute(char *command_path, char **args, char *argv0);
-
-/* Built-in command functions */
-void handle_exit(char *line, char **args, int status);
-int handle_env(void);
-int is_builtin(char **args, char *line, int status);
-
-#endif /* MAIN_H */
