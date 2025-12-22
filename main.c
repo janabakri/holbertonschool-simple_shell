@@ -25,7 +25,7 @@ int main(int ac, char **argv, char **env)
         if (strcmp(line, "exit\n") == 0)
         {
             free(line);
-            handle_exit(status);  /* أرسل آخر حالة خروج */
+            handle_exit(status);  /* استخدم آخر exit status */
         }
 
         status = execute_command(line, argv[0], env, count);
