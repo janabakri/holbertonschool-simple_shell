@@ -1,33 +1,33 @@
-#include "shell.h"
-
-void execute_command(char *line, char *prog, char **env, int count)
+int execute_command(char *line, char *prog, char **env, int count)
 {
-	char **argv;
-	char *path;
-	pid_t pid;
+    char **argv = split_line(line);
+    char *path = find_path(argv[0], env);
 
-	argv = split_line(line);
-	if (!argv || !argv[0])
-	{
-		free_argv(argv);
-		return;
-	}
+    if (!path)
+    {
+        print_error(prog, argv[0], count);
+        free_argv(argv);
+        return 127;
+    }
 
-	path = find_path(argv[0], env);
-	if (!path)
-	{
-		print_error(prog, argv[0], count);
-		free_argv(argv);
-		return;
-	}
+    pid_t pid = fork();
+    int status;
 
-	pid = fork();
-	if (pid == 0)
-		execve(path, argv, env);
-	else
-		wait(NULL);
+    if (pid == 0)
+    {
+        execve(path, argv, env);
+        print_error(prog, argv[0], count);
+        exit(127);
+    }
+    else
+    {
+        waitpid(pid, &status, 0);
+        free(path);
+        free_argv(argv);
+        if (WIFEXITED(status))
+            return WEXITSTATUS(status);
+    }
 
-	free(path);
-	free_argv(argv);
+    return 0;
 }
 
