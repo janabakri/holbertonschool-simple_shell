@@ -25,7 +25,13 @@ int main(int ac, char **argv, char **env)
         if (strcmp(line, "exit\n") == 0)
         {
             free(line);
-            handle_exit();  /* بدون معاملات */
+            handle_exit();
+        }
+
+        if (strcmp(line, "env\n") == 0)
+        {
+            handle_env();
+            continue;  /* العودة لانتظار أمر جديد */
         }
 
         last_status = execute_command(line, argv[0], env, count);

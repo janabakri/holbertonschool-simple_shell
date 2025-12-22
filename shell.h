@@ -11,9 +11,10 @@
 #include <fcntl.h>
 #include <errno.h>
 
+/* البيئة العالمية */
 extern char **environ;
 
-/* المتغير العالمي لتخزين آخر حالة خروج */
+/* آخر حالة خروج */
 extern int last_status;
 
 /* الدوال الأساسية */
@@ -25,6 +26,7 @@ void free_argv(char **argv);
 
 /* built-in */
 void handle_exit(void);  /* بدون معاملات */
+void handle_env(void);   /* لطباعة البيئة */
 
 #endif /* SHELL_H */
 
