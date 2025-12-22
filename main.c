@@ -6,7 +6,7 @@ int main(int ac, char **argv, char **env)
     size_t len = 0;
     ssize_t read;
     int count = 0;
-    int status = 0;
+    int status = 0; /* آخر حالة خروج */
 
     (void)ac;
 
@@ -22,10 +22,10 @@ int main(int ac, char **argv, char **env)
         count++;
 
         /* تحقق من built-in exit */
-        if (line[0] != '\0' && strcmp(line, "exit\n") == 0)
+        if (strcmp(line, "exit\n") == 0)
         {
             free(line);
-            handle_exit();
+            handle_exit(status);  /* أرسل آخر حالة خروج */
         }
 
         status = execute_command(line, argv[0], env, count);
