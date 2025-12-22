@@ -20,6 +20,14 @@ int main(int ac, char **argv, char **env)
             break;
 
         count++;
+
+        /* تحقق من built-in exit */
+        if (line[0] != '\0' && strcmp(line, "exit\n") == 0)
+        {
+            free(line);
+            handle_exit();
+        }
+
         status = execute_command(line, argv[0], env, count);
     }
 

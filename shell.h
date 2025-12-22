@@ -18,6 +18,7 @@ char **split_line(char *line);
 char *find_path(char *command, char **env);
 void print_error(char *prog, char *cmd, int count);
 void free_argv(char **argv);
+void handle_exit(void);
 
 #endif /* SHELL_H */
 
