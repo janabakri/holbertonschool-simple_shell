@@ -18,4 +18,3 @@ void free_args(char **args);
 int execute_command(char **args, char *argv0, int last_status);
 
 #endif /* MAIN_H */
-

@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * main - simple shell
+ * main - simple shell 0.2
  * @ac: argument count
  * @av: argument vector
  *
@@ -69,4 +69,3 @@ int main(int ac, char **av)
 	free(line);
 	return (0);
 }
-

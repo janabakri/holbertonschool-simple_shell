@@ -1,12 +1,12 @@
 #include "main.h"
 
 /**
- * execute_command - Execute a command with arguments (no PATH search)
- * @args: tokenized args (args[0] is command path)
+ * execute_command - Execute a command with arguments (no PATH)
+ * @args: tokenized args (args[0] is command)
  * @argv0: program name
- * @last_status: last status (unused now)
+ * @last_status: last status (unused for now)
  *
- * Return: exit status of command if exited, else 0
+ * Return: exit status if exited, else 0
  */
 int execute_command(char **args, char *argv0, int last_status)
 {
@@ -26,7 +26,6 @@ int execute_command(char **args, char *argv0, int last_status)
 	{
 		execve(args[0], args, environ);
 
-		/* execve failed */
 		write(STDERR_FILENO, argv0, strlen(argv0));
 		write(STDERR_FILENO, ": ", 2);
 		write(STDERR_FILENO, args[0], strlen(args[0]));
@@ -41,4 +40,3 @@ int execute_command(char **args, char *argv0, int last_status)
 
 	return (0);
 }
-

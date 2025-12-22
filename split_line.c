@@ -1,10 +1,10 @@
 #include "main.h"
 
 /**
- * split_line - split line into tokens (args)
- * @line: input line (will be modified by strtok)
+ * split_line - split a command line into tokens
+ * @line: line to split (will be modified)
  *
- * Return: NULL on failure, or NULL-terminated array of pointers
+ * Return: array of tokens (NULL terminated) or NULL on failure
  */
 char **split_line(char *line)
 {
@@ -23,7 +23,6 @@ char **split_line(char *line)
 		count++;
 		tok = strtok(NULL, " \t");
 	}
-
 	free(tmp);
 
 	args = malloc(sizeof(char *) * (count + 1));
@@ -43,11 +42,10 @@ char **split_line(char *line)
 }
 
 /**
- * free_args - free args array (not the strings)
+ * free_args - free args array
  * @args: args array
  */
 void free_args(char **args)
 {
 	free(args);
 }
-
