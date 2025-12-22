@@ -2,13 +2,13 @@
 
 void free_argv(char **argv)
 {
-	int i;
+    int i;
 
-	if (!argv)
-		return;
+    if (!argv)
+        return;
 
-	for (i = 0; argv[i]; i++)
-		free(argv[i]);
-	free(argv);
+    for (i = 0; argv[i]; i++)
+        free(argv[i]);
+    free(argv);
 }
 

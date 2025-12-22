@@ -1,8 +1,15 @@
+#include "shell.h"
+
 int execute_command(char *line, char *prog, char **env, int count)
 {
     char **argv = split_line(line);
-    char *path = find_path(argv[0], env);
+    if (!argv || !argv[0])
+    {
+        free_argv(argv);
+        return 0;
+    }
 
+    char *path = find_path(argv[0], env);
     if (!path)
     {
         print_error(prog, argv[0], count);

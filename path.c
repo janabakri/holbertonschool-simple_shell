@@ -1,38 +1,47 @@
 #include "shell.h"
 
-char *find_path(char *cmd, char **env)
+char *find_path(char *command, char **env)
 {
-	char *path, *dir, *full;
-	struct stat st;
-	int i;
+    int i;
+    char *path_env = NULL;
+    char *path_dup, *dir, *fullpath;
+    struct stat st;
 
-	if (cmd[0] == '/' || cmd[0] == '.')
-	{
-		if (stat(cmd, &st) == 0)
-			return (strdup(cmd));
-		return (NULL);
-	}
+    if (strchr(command, '/'))
+    {
+        if (stat(command, &st) == 0)
+            return strdup(command);
+        else
+            return NULL;
+    }
 
-	for (i = 0; env[i]; i++)
-	{
-		if (strncmp(env[i], "PATH=", 5) == 0)
-			path = strdup(env[i] + 5);
-	}
+    for (i = 0; env[i]; i++)
+    {
+        if (strncmp(env[i], "PATH=", 5) == 0)
+        {
+            path_env = env[i] + 5;
+            break;
+        }
+    }
 
-	dir = strtok(path, ":");
-	while (dir)
-	{
-		full = malloc(strlen(dir) + strlen(cmd) + 2);
-		sprintf(full, "%s/%s", dir, cmd);
-		if (stat(full, &st) == 0)
-		{
-			free(path);
-			return (full);
-		}
-		free(full);
-		dir = strtok(NULL, ":");
-	}
-	free(path);
-	return (NULL);
+    if (!path_env)
+        return NULL;
+
+    path_dup = strdup(path_env);
+    dir = strtok(path_dup, ":");
+    while (dir)
+    {
+        fullpath = malloc(strlen(dir) + strlen(command) + 2);
+        sprintf(fullpath, "%s/%s", dir, command);
+        if (stat(fullpath, &st) == 0)
+        {
+            free(path_dup);
+            return fullpath;
+        }
+        free(fullpath);
+        dir = strtok(NULL, ":");
+    }
+    free(path_dup);
+    return NULL;
 }
 

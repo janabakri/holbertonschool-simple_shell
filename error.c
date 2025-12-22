@@ -2,6 +2,6 @@
 
 void print_error(char *prog, char *cmd, int count)
 {
-	fprintf(stderr, "%s: %d: %s: not found\n", prog, count, cmd);
+    dprintf(STDERR_FILENO, "%s: %d: %s: not found\n", prog, count, cmd);
 }
 
