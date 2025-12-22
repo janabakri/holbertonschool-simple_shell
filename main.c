@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * main - simple shell 0.1
+ * main - simple shell
  * @ac: argument count
  * @av: argument vector
  *
@@ -13,6 +13,7 @@ int main(int ac, char **av)
 	size_t len;
 	ssize_t read_bytes;
 	int status;
+	char **args;
 
 	(void)ac;
 	line = NULL;
@@ -40,7 +41,6 @@ int main(int ac, char **av)
 		while (*cmd == ' ' || *cmd == '\t')
 			cmd++;
 
-		/* if empty after leading trim, continue */
 		if (*cmd == '\0')
 			continue;
 
@@ -52,12 +52,21 @@ int main(int ac, char **av)
 			end--;
 		}
 
-		if (strcmp(cmd, "exit") == 0)
-			break;
+		args = split_line(cmd);
+		if (args == NULL)
+			continue;
 
-		status = execute_command(NULL, av[0], cmd, status);
+		if (args[0] != NULL && strcmp(args[0], "exit") == 0)
+		{
+			free_args(args);
+			break;
+		}
+
+		status = execute_command(args, av[0], status);
+		free_args(args);
 	}
 
 	free(line);
 	return (0);
 }
+
