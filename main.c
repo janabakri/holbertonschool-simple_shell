@@ -9,7 +9,7 @@
  */
 int main(int ac, char **av)
 {
-	char *line;
+	char *line, *cmd, *end;
 	size_t len;
 	ssize_t read_bytes;
 	int status;
@@ -35,16 +35,29 @@ int main(int ac, char **av)
 		if (read_bytes > 0 && line[read_bytes - 1] == '\n')
 			line[read_bytes - 1] = '\0';
 
-		if (line[0] == '\0')
+		/* trim leading spaces/tabs */
+		cmd = line;
+		while (*cmd == ' ' || *cmd == '\t')
+			cmd++;
+
+		/* if empty after leading trim, continue */
+		if (*cmd == '\0')
 			continue;
 
-		if (strcmp(line, "exit") == 0)
+		/* trim trailing spaces/tabs */
+		end = cmd + strlen(cmd) - 1;
+		while (end > cmd && (*end == ' ' || *end == '\t'))
+		{
+			*end = '\0';
+			end--;
+		}
+
+		if (strcmp(cmd, "exit") == 0)
 			break;
 
-		status = execute_command(NULL, av[0], line, status);
+		status = execute_command(NULL, av[0], cmd, status);
 	}
 
 	free(line);
 	return (0);
 }
-
