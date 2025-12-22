@@ -5,10 +5,13 @@
 
 char **split_line(char *line)
 {
-    int bufsize = TOK_BUFSIZE, pos = 0;
-    char **tokens = malloc(bufsize * sizeof(char *));
+    int bufsize, pos;
+    char **tokens;
     char *token;
 
+    bufsize = TOK_BUFSIZE;
+    pos = 0;
+    tokens = malloc(bufsize * sizeof(char *));
     if (!tokens)
     {
         fprintf(stderr, "allocation error\n");
@@ -18,7 +21,8 @@ char **split_line(char *line)
     token = strtok(line, TOK_DELIM);
     while (token != NULL)
     {
-        tokens[pos++] = strdup(token);
+        tokens[pos] = strdup(token);
+        pos++;
 
         if (pos >= bufsize)
         {

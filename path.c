@@ -3,8 +3,10 @@
 char *find_path(char *command, char **env)
 {
     int i;
-    char *path_env = NULL;
-    char *path_dup, *dir, *fullpath;
+    char *path_env;
+    char *path_dup;
+    char *dir;
+    char *fullpath;
     struct stat st;
 
     if (strchr(command, '/'))
@@ -15,6 +17,7 @@ char *find_path(char *command, char **env)
             return NULL;
     }
 
+    path_env = NULL;
     for (i = 0; env[i]; i++)
     {
         if (strncmp(env[i], "PATH=", 5) == 0)
@@ -41,6 +44,7 @@ char *find_path(char *command, char **env)
         free(fullpath);
         dir = strtok(NULL, ":");
     }
+
     free(path_dup);
     return NULL;
 }
