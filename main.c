@@ -1,43 +1,40 @@
 #include "shell.h"
 
 /**
- * main - Simple shell skeleton (Betty compliant)
- * @ac: Number of arguments
- * @av: Arguments array
+ * main - Entry point for simple shell 0.1
+ * @ac: argument count
+ * @av: argument vector
  *
- * Return: Always 0
+ * Return: 0 on success
  */
 int main(int ac, char **av)
 {
 	char *line = NULL;
 	size_t len = 0;
-	ssize_t read;
-	int interactive;
+	ssize_t nread;
+	shell_state_t st;
 
 	(void)ac;
-	(void)av;
 
-	interactive = isatty(STDIN_FILENO);
+	st.argv0 = av[0];
+	st.line_number = 0;
 
 	while (1)
 	{
-		if (interactive)
-			write(STDOUT_FILENO, "($) ", 4);
+		st.line_number++;
 
-		read = getline(&line, &len, stdin);
-		if (read == -1)
+		if (prompt_if_interactive() == -1)
+			break;
+
+		nread = getline(&line, &len, stdin);
+		if (nread == -1)
 		{
-			if (interactive)
+			if (isatty(STDIN_FILENO))
 				write(STDOUT_FILENO, "\n", 1);
 			break;
 		}
 
-		if (read >= 5 &&
-		    line[0] == 'e' &&
-		    line[1] == 'x' &&
-		    line[2] == 'i' &&
-		    line[3] == 't' &&
-		    (line[4] == '\n' || line[4] == ' '))
+		if (run_line(&st, line) == -1)
 			break;
 	}
 
