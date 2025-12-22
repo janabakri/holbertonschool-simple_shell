@@ -1,7 +1,7 @@
 #include "shell.h"
 
-void handle_exit(int status)
+void handle_exit(void)
 {
-    exit(status);
+    exit(last_status);  /* يخرج باستخدام آخر حالة خروج */
 }
 

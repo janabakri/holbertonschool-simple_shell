@@ -13,12 +13,18 @@
 
 extern char **environ;
 
+/* المتغير العالمي لتخزين آخر حالة خروج */
+extern int last_status;
+
+/* الدوال الأساسية */
 int execute_command(char *line, char *prog, char **env, int count);
 char **split_line(char *line);
 char *find_path(char *command, char **env);
 void print_error(char *prog, char *cmd, int count);
 void free_argv(char **argv);
-void handle_exit(void);
+
+/* built-in */
+void handle_exit(void);  /* بدون معاملات */
 
 #endif /* SHELL_H */
 

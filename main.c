@@ -1,19 +1,15 @@
 #include "shell.h"
 
+int last_status = 0;  /* آخر حالة خروج */
+
 int main(int ac, char **argv, char **env)
 {
-    char *line;
-    size_t len;
+    char *line = NULL;
+    size_t len = 0;
     ssize_t read;
-    int count;
-    int status;
+    int count = 0;
 
     (void)ac;
-
-    line = NULL;
-    len = 0;
-    count = 0;
-    status = 0;
 
     while (1)
     {
@@ -29,13 +25,13 @@ int main(int ac, char **argv, char **env)
         if (strcmp(line, "exit\n") == 0)
         {
             free(line);
-            handle_exit(status);
+            handle_exit();  /* بدون معاملات */
         }
 
-        status = execute_command(line, argv[0], env, count);
+        last_status = execute_command(line, argv[0], env, count);
     }
 
     free(line);
-    return status;
+    return last_status;
 }
 
