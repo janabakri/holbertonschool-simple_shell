@@ -1,7 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,14 +10,12 @@
 extern char **environ;
 
 /**
- * struct shell_state - Shell runtime state
- * @argv0: program name (argv[0])
- * @line_number: current line number (1-based)
+ * struct shell_state - shell state
+ * @argv0: program name
  */
 typedef struct shell_state
 {
 	char *argv0;
-	unsigned long line_number;
 } shell_state_t;
 
 int prompt_if_interactive(void);
