@@ -9,46 +9,42 @@
  */
 int main(int ac, char **av)
 {
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read_bytes;
-    shell_state_t st;
-    int status = 0;
+	char *line;
+	size_t len;
+	ssize_t read_bytes;
+	int status;
 
-    (void)ac;
-    st.argv0 = av[0];
+	(void)ac;
+	line = NULL;
+	len = 0;
+	status = 0;
 
-    while (1)
-    {
-        /* Display prompt if in interactive mode */
-        if (isatty(STDIN_FILENO))
-            display_prompt();
+	while (1)
+	{
+		if (isatty(STDIN_FILENO))
+			display_prompt();
 
-        /* Read command line */
-        read_bytes = getline(&line, &len, stdin);
-        if (read_bytes == -1)
-        {
-            if (isatty(STDIN_FILENO))
-                write(STDOUT_FILENO, "\n", 1);
-            break;
-        }
+		read_bytes = getline(&line, &len, stdin);
+		if (read_bytes == -1)
+		{
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
+			break;
+		}
 
-        /* Remove newline character */
-        if (read_bytes > 0 && line[read_bytes - 1] == '\n')
-            line[read_bytes - 1] = '\0';
+		if (read_bytes > 0 && line[read_bytes - 1] == '\n')
+			line[read_bytes - 1] = '\0';
 
-        /* Skip empty lines */
-        if (line[0] == '\0')
-            continue;
+		if (line[0] == '\0')
+			continue;
 
-        /* Check for exit command */
-        if (strcmp(line, "exit") == 0)
-            break;
+		if (strcmp(line, "exit") == 0)
+			break;
 
-        /* Execute command */
-        status = execute_command(NULL, av[0], line, status);
-    }
+		status = execute_command(NULL, av[0], line, status);
+	}
 
-    free(line);
-    return (0);
+	free(line);
+	return (0);
 }
+
