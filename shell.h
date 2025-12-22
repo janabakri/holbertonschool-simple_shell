@@ -1,4 +1,4 @@
-#ifndef MAIN_H
+i#ifndef MAIN_H
 #define MAIN_H
 
 #include <stdio.h>
@@ -13,6 +13,12 @@
 
 /* Environment variable */
 extern char **environ;
+
+/* Shell state structure */
+typedef struct shell_state
+{
+    char *argv0;
+} shell_state_t;
 
 /* Main shell functions */
 void display_prompt(void);
