@@ -2,14 +2,19 @@
 
 int execute_command(char *line, char *prog, char **env, int count)
 {
-    char **argv = split_line(line);
+    char **argv;
+    char *path;
+    pid_t pid;
+    int status;
+
+    argv = split_line(line);
     if (!argv || !argv[0])
     {
         free_argv(argv);
         return 0;
     }
 
-    char *path = find_path(argv[0], env);
+    path = find_path(argv[0], env);
     if (!path)
     {
         print_error(prog, argv[0], count);
@@ -17,9 +22,7 @@ int execute_command(char *line, char *prog, char **env, int count)
         return 127;
     }
 
-    pid_t pid = fork();
-    int status;
-
+    pid = fork();
     if (pid == 0)
     {
         execve(path, argv, env);
