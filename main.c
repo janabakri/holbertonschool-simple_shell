@@ -100,14 +100,18 @@ int main(int ac, char **argv, char **env)
 
 		/* handle CRLF */
 		{
-			int n = (int)strlen(line);
+			int n = _strlen(line);
 
 			if (n > 0 && line[n - 1] == '\r')
 				line[n - 1] = '\0';
 		}
 
+		/* optional: ignore empty lines */
+		if (line[0] == '\0')
+			continue;
+
 		/* builtins */
-		if (strcmp(line, "exit") == 0)
+		if (_strcmp(line, "exit") == 0)
 		{
 			free(line);
 			line = NULL;
@@ -115,7 +119,7 @@ int main(int ac, char **argv, char **env)
 			handle_exit();
 		}
 
-		if (strcmp(line, "env") == 0)
+		if (_strcmp(line, "env") == 0)
 		{
 			handle_env(env);
 			continue;
