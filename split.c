@@ -7,6 +7,19 @@ static int is_delim(char c)
 	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\a');
 }
 
+static void free_tokens(char **tokens)
+{
+	int i;
+
+	if (!tokens)
+		return;
+
+	for (i = 0; tokens[i]; i++)
+		free(tokens[i]);
+
+	free(tokens);
+}
+
 char **split_line(char *line)
 {
 	int bufsize = TOK_BUFSIZE;
@@ -23,17 +36,14 @@ char **split_line(char *line)
 
 	while (line[i] != '\0')
 	{
-		/* skip delimiters */
 		while (line[i] != '\0' && is_delim(line[i]))
 			i++;
 
 		if (line[i] == '\0')
 			break;
 
-		/* token start */
 		start = i;
 
-		/* find token end */
 		while (line[i] != '\0' && !is_delim(line[i]))
 			i++;
 
@@ -42,7 +52,7 @@ char **split_line(char *line)
 		tokens[pos] = malloc((len + 1) * sizeof(char));
 		if (!tokens[pos])
 		{
-			free_argv(tokens);
+			free_tokens(tokens);
 			return (NULL);
 		}
 
@@ -60,7 +70,7 @@ char **split_line(char *line)
 			tmp = realloc(tokens, bufsize * sizeof(char *));
 			if (!tmp)
 			{
-				free_argv(tokens);
+				free_tokens(tokens);
 				return (NULL);
 			}
 			tokens = tmp;
