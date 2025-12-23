@@ -8,20 +8,29 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+extern int last_status;
 extern char **environ;
 
-/* Prompt */
-void display_prompt(void);
-
-/* Required: custom getline (do NOT use getline) */
+/* Task 0.1.1: your custom getline */
 ssize_t my_getline(char **lineptr, size_t *n, int fd);
 
-/* Split + free */
+/* Builtins */
+void handle_exit(void);
+void handle_env(char **env);
+
+/* MUST match execute.c exactly */
+int execute_command(char *line, char *prog, char **env, int count);
+
+/* Helpers used by execute.c */
+char *find_path(char *command, char **env);
+void print_error(char *prog, char *cmd, int count);
+
+/* If execute.c calls free_argv, declare it */
+void free_argv(char **argv);
+
+/* If you use these */
 char **split_line(char *line);
 void free_args(char **args);
-
-/* Execute */
-int execute_command(char **args, char *argv0, int last_status);
 
 #endif /* SHELL_H */
 
