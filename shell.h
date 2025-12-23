@@ -3,30 +3,25 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
 
-/* البيئة العالمية */
 extern char **environ;
 
-/* آخر حالة خروج */
-extern int last_status;
+/* Prompt */
+void display_prompt(void);
 
-/* الدوال الأساسية */
-int execute_command(char *line, char *prog, char **env, int count);
+/* Required: custom getline (do NOT use getline) */
+ssize_t my_getline(char **lineptr, size_t *n, int fd);
+
+/* Split + free */
 char **split_line(char *line);
-char *find_path(char *command, char **env);
-void print_error(char *prog, char *cmd, int count);
-void free_argv(char **argv);
+void free_args(char **args);
 
-/* built-in */
-void handle_exit(void);  /* بدون معاملات */
-void handle_env(void);   /* لطباعة البيئة */
+/* Execute */
+int execute_command(char **args, char *argv0, int last_status);
 
 #endif /* SHELL_H */
 
