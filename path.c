@@ -1,4 +1,6 @@
+#include <sys/stat.h>
 #include "shell.h"
+
 
 char *find_path(char *command, char **env)
 {
