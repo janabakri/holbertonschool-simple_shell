@@ -11,26 +11,21 @@
 extern int last_status;
 extern char **environ;
 
-/* Task 0.1.1: your custom getline */
+/* custom getline (you still need to implement it) */
 ssize_t my_getline(char **lineptr, size_t *n, int fd);
 
-/* Builtins */
+/* builtins */
 void handle_exit(void);
 void handle_env(char **env);
 
-/* MUST match execute.c exactly */
+/* executor */
 int execute_command(char *line, char *prog, char **env, int count);
 
-/* Helpers used by execute.c */
+/* helpers */
+char **split_line(char *line);
+void free_argv(char **argv);
 char *find_path(char *command, char **env);
 void print_error(char *prog, char *cmd, int count);
-
-/* If execute.c calls free_argv, declare it */
-void free_argv(char **argv);
-
-/* If you use these */
-char **split_line(char *line);
-void free_args(char **args);
 
 #endif /* SHELL_H */
 
