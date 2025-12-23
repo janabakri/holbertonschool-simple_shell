@@ -1,43 +1,73 @@
 #include "shell.h"
 
 #define TOK_BUFSIZE 64
-#define TOK_DELIM " \t\r\n\a"
+
+static int is_delim(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\a');
+}
 
 char **split_line(char *line)
 {
-    int bufsize, pos;
-    char **tokens;
-    char *token;
+	int bufsize = TOK_BUFSIZE;
+	int pos = 0;
+	int i = 0, start, len, k;
+	char **tokens;
 
-    bufsize = TOK_BUFSIZE;
-    pos = 0;
-    tokens = malloc(bufsize * sizeof(char *));
-    if (!tokens)
-    {
-        fprintf(stderr, "allocation error\n");
-        exit(EXIT_FAILURE);
-    }
+	if (!line)
+		return (NULL);
 
-    token = strtok(line, TOK_DELIM);
-    while (token != NULL)
-    {
-        tokens[pos] = strdup(token);
-        pos++;
+	tokens = malloc(bufsize * sizeof(char *));
+	if (!tokens)
+		return (NULL);
 
-        if (pos >= bufsize)
-        {
-            bufsize += TOK_BUFSIZE;
-            tokens = realloc(tokens, bufsize * sizeof(char *));
-            if (!tokens)
-            {
-                fprintf(stderr, "allocation error\n");
-                exit(EXIT_FAILURE);
-            }
-        }
+	while (line[i] != '\0')
+	{
+		/* skip delimiters */
+		while (line[i] != '\0' && is_delim(line[i]))
+			i++;
 
-        token = strtok(NULL, TOK_DELIM);
-    }
-    tokens[pos] = NULL;
-    return tokens;
+		if (line[i] == '\0')
+			break;
+
+		/* token start */
+		start = i;
+
+		/* find token end */
+		while (line[i] != '\0' && !is_delim(line[i]))
+			i++;
+
+		len = i - start;
+
+		tokens[pos] = malloc((len + 1) * sizeof(char));
+		if (!tokens[pos])
+		{
+			free_argv(tokens);
+			return (NULL);
+		}
+
+		for (k = 0; k < len; k++)
+			tokens[pos][k] = line[start + k];
+		tokens[pos][k] = '\0';
+
+		pos++;
+
+		if (pos >= bufsize)
+		{
+			char **tmp;
+
+			bufsize += TOK_BUFSIZE;
+			tmp = realloc(tokens, bufsize * sizeof(char *));
+			if (!tmp)
+			{
+				free_argv(tokens);
+				return (NULL);
+			}
+			tokens = tmp;
+		}
+	}
+
+	tokens[pos] = NULL;
+	return (tokens);
 }
 
