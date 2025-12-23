@@ -7,13 +7,12 @@ void handle_exit(void)
 
 void handle_env(char **env)
 {
-	int i = 0;
+	int i;
 
-	while (env && env[i])
+	for (i = 0; env && env[i]; i++)
 	{
-		write(STDOUT_FILENO, env[i], strlen(env[i]));
+		write(STDOUT_FILENO, env[i], _strlen(env[i]));
 		write(STDOUT_FILENO, "\n", 1);
-		i++;
 	}
 }
 
