@@ -10,7 +10,7 @@ int execute_command(char *line, char *prog, char **env, int count)
 	argv = split_line(line);
 	if (!argv || !argv[0])
 	{
-		free_args(argv);
+		free_argv(argv);
 		return (0);
 	}
 
@@ -18,7 +18,7 @@ int execute_command(char *line, char *prog, char **env, int count)
 	if (!path)
 	{
 		print_error(prog, argv[0], count);
-		free_args(argv);
+		free_argv(argv);
 		return (127);
 	}
 
@@ -26,7 +26,7 @@ int execute_command(char *line, char *prog, char **env, int count)
 	if (pid == -1)
 	{
 		free(path);
-		free_args(argv);
+		free_argv(argv);
 		return (1);
 	}
 
@@ -37,15 +37,9 @@ int execute_command(char *line, char *prog, char **env, int count)
 		_exit(127);
 	}
 
-	if (waitpid(pid, &status, 0) == -1)
-	{
-		free(path);
-		free_args(argv);
-		return (1);
-	}
-
+	waitpid(pid, &status, 0);
 	free(path);
-	free_args(argv);
+	free_argv(argv);
 
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
