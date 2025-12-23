@@ -91,3 +91,5 @@ It executes commands in both interactive and non-interactive modes, handles buil
 | builtin.c     | Built-in commands implementation     | handle_exit, handle_env, is_builtin               |
 | README.md     | Project documentation                | N/A                                               |
 
+Jana Rasheed Bakri
+Munirah Enad Alotaibi 
