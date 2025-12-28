@@ -90,6 +90,79 @@ It executes commands in both interactive and non-interactive modes, handles buil
 | run_command.c | Command execution and process mgmt   | fork_and_execute, execute_command                 |
 | builtin.c     | Built-in commands implementation     | handle_exit, handle_env, is_builtin               |
 | README.md     | Project documentation                | N/A                                               |
+            ┌───────────────┐
+            │   Start hsh   │
+            └───────┬───────┘
+                    │
+            ┌───────▼───────┐
+            │ Display $     │
+            │ (Interactive) │
+            └───────┬───────┘
+                    │
+            ┌───────▼───────┐
+            │ Read Input    │
+            │ (_getline)    │
+            └───────┬───────┘
+                    │
+        ┌───────────▼───────────┐
+        │ EOF (Ctrl+D) ?         │
+        └───────┬───────────────┘
+                │Yes
+                ▼
+        ┌───────────────────┐
+        │ Free memory &     │
+        │ Exit shell        │
+        └───────────────────┘
+                ▲
+                │No
+        ┌───────┴───────────┐
+        │ Parse input       │
+        │ into arguments    │
+        └───────┬───────────┘
+                │
+        ┌───────▼───────────┐
+        │ Built-in command? │
+        └───────┬───────────┘
+            Yes │       No
+                │
+        ┌───────▼───────┐   ┌───────────────────┐
+        │ Execute       │   │ Find command in    │
+        │ built-in      │   │ PATH or absolute   │
+        │ (exit/env)    │   │ path               │
+        └───────┬───────┘   └─────────┬─────────┘
+                │                     │
+                │             ┌───────▼───────────┐
+                │             │ Command found ?   │
+                │             └───────┬───────────┘
+                │                 Yes │       No
+                │                     │
+        ┌───────▼───────┐     ┌───────▼───────┐
+        │ Update exit   │     │ Print error   │
+        │ status        │     │ exit = 127    │
+        └───────┬───────┘     └───────┬───────┘
+                │                     │
+                └───────────┬─────────┘
+                            │
+                    ┌───────▼───────┐
+                    │ Fork process  │
+                    └───────┬───────┘
+                            │
+                    ┌───────▼───────┐
+                    │ execve()      │
+                    └───────┬───────┘
+                            │
+                    ┌───────▼───────┐
+                    │ waitpid()     │
+                    │ get exit code │
+                    └───────┬───────┘
+                            │
+                    ┌───────▼───────┐
+                    │ Free memory   │
+                    └───────┬───────┘
+                            │
+                    ┌───────▼───────┐
+                    │ Loop again    │
+                    └───────────────┘
 
 Jana Rasheed Bakri
 Munirah Enad Alotaibi 
