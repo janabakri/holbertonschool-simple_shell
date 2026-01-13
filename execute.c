@@ -2,14 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-void free_argv(char **argv);  // Declare the function from utils.c
+// --- utils.c functions ---
+void free_argv(char **argv) {
+    if (!argv)
+        return;
+    for (int i = 0; argv[i] != NULL; i++) {
+        free(argv[i]);
+    }
+    free(argv);
+}
 
-// Function to execute a command
+// --- execute.c functions ---
 int execute_command(char *command) {
-    char **argv = NULL;   // Assume argv is created here from command
+    char **argv = NULL;
     int argc = 0;
 
-    // For demonstration, let's split command by space
+    // Split command by space
     char *token = strtok(command, " ");
     while (token != NULL) {
         argv = realloc(argv, sizeof(char*) * (argc + 2));
@@ -21,11 +29,10 @@ int execute_command(char *command) {
         argc++;
         token = strtok(NULL, " ");
     }
-    if (argv) {
-        argv[argc] = NULL;  // NULL-terminate the array
-    }
+    if (argv)
+        argv[argc] = NULL;
 
-    // Normally you would fork and exec here
+    // Print command parts
     printf("Command parts:\n");
     for (int i = 0; i < argc; i++) {
         printf("[%d]: %s\n", i, argv[i]);
@@ -37,6 +44,7 @@ int execute_command(char *command) {
     return 0;
 }
 
+// --- main ---
 int main() {
     char command[] = "echo Hello World";
     execute_command(command);
